@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-as-const */
 import { fauna } from "@/services/fauna";
 import { fql } from "fauna";
 import NextAuth from "next-auth";
@@ -13,7 +14,9 @@ export const authOptions = {
       },
     }),
   ],
-
+  session: {
+    strategy: "jwt" as "jwt",
+  },
   callbacks: {
     async signIn({ user }: { user: { email?: string | null } }) {
       /* from create a new collection
