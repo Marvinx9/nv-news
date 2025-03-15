@@ -29,6 +29,15 @@ export const authOptions = {
       try {
         if (!email) return false;
 
+        const queryUserExists = fql`
+          users.user_by_email(${email}).first()`;
+
+        const userExists = await fauna.query(queryUserExists);
+
+        if (userExists.data) {
+          return true;
+        }
+
         const query = fql`
         users.create({
           email: ${email!}
