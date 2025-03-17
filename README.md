@@ -13,3 +13,5 @@ Static Site Generation (SSG) - as páginas estáticas são pré-renderizadas em 
 Otimizar imagens e gerar elas com tamanho diferente para termos imagens com qualidade boa em diferentes dimensões sem distorção.
 
 Fauna Query Language (FQL) - uso da linguagem fql para manipulação no banco de dados Fauna.
+
+Prismic CMS - npx @slicemachine/init@latest --repository publication
