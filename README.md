@@ -2,6 +2,12 @@ Stripe - ferramentas para receber pagamentos.
 
 Stripe-webhooks - utilizado para capturar eventos e realizar tomadas de decisão comforme cada caso.
 
+executar stripe:
+
+```bash
+stripe listen --forward-to localhost:3000/api/webhooks
+```
+
 FaunaDB - utilizado para armazenar dados do usuário e persistir essas informações.
 
 GitHub - o usuário pode realizar o login usandp o github, desde que o usuário possua uma conta no github com email público disponível.
@@ -14,4 +20,9 @@ Otimizar imagens e gerar elas com tamanho diferente para termos imagens com qual
 
 Fauna Query Language (FQL) - uso da linguagem fql para manipulação no banco de dados Fauna.
 
-Prismic CMS - npx @slicemachine/init@latest --repository publication
+Prismic CMS
+executar prismic
+
+```bash
+npx @slicemachine/init@latest --repository publication
+```

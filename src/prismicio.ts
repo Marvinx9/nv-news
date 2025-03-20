@@ -1,6 +1,6 @@
 import {
   createClient as baseCreateClient,
-  type Routes,
+  type Route,
 } from "@prismicio/client";
 import {
   enableAutoPreviews,
@@ -8,41 +8,22 @@ import {
 } from "@prismicio/next/pages";
 import sm from "../slicemachine.config.json";
 
-/**
- * The project's Prismic repository name.
- */
-export const repositoryName =
-  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || sm.repositoryName;
+export const repositoryName = sm.repositoryName;
 
-/**
- * A list of Route Resolver objects that define how a document's `url` field is resolved.
- *
- * {@link https://prismic.io/docs/route-resolver#route-resolver}
- */
-// TODO: Update the routes array to match your project's route structure.
-const routes: Route[] = [
-  // Examples:
-  // { type: "homepage", path: "/" },
-  // { type: "page", path: "/:uid" },
-];
+const routes: Route[] = [{ type: "publication", path: "/pages/posts" }];
 
-/**
- * Creates a Prismic client for the project's repository. The client is used to
- * query content from the Prismic API.
- *
- * @param config - Configuration for the Prismic client.
- */
-export const createClient = ({
-  previewData,
+export function createClient({
   req,
+  previewData,
   ...config
-}: CreateClientConfig = {}) => {
+}: CreateClientConfig = {}) {
   const client = baseCreateClient(repositoryName, {
     routes,
+    accessToken: process.env.PRISMIC_ACCESS_TOKEN,
     ...config,
   });
 
-  enableAutoPreviews({ client, previewData, req });
+  enableAutoPreviews({ client, req, previewData });
 
   return client;
-};
+}

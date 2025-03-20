@@ -1,7 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Head from "next/head";
 import styles from "./styles.module.scss";
+import { createClient } from "@/prismicio";
+import Link from "next/link";
+import { GetStaticProps } from "next";
 
-export default function Posts() {
+interface Post {
+  uid: string;
+  title: string;
+  excerpt: string;
+  updatedAt: string;
+}
+
+interface PostsProps {
+  posts: Post[];
+}
+
+export default function Posts({ posts }: PostsProps) {
   return (
     <>
       <Head>
@@ -10,32 +25,46 @@ export default function Posts() {
 
       <main className={styles.container}>
         <div className={styles.posts}>
-          <a href="">
-            <time>12 de março de 2024</time>
-            <strong>Creating a Monorepo with Lerna & UYarn Workspaces</strong>
-            <p>
-              In this guide, you will learn how to create a Monorepo to manage
-              multiple packages with a shared build, test, and realease process.
-            </p>
-          </a>
-          <a href="">
-            <time>12 de março de 2024</time>
-            <strong>Creating a Monorepo with Lerna & UYarn Workspaces</strong>
-            <p>
-              In this guide, you will learn how to create a Monorepo to manage
-              multiple packages with a shared build, test, and realease process.
-            </p>
-          </a>
-          <a href="">
-            <time>12 de março de 2024</time>
-            <strong>Creating a Monorepo with Lerna & UYarn Workspaces</strong>
-            <p>
-              In this guide, you will learn how to create a Monorepo to manage
-              multiple packages with a shared build, test, and realease process.
-            </p>
-          </a>
+          {posts.map((post) => (
+            <Link key={post.uid} href={`/pages/posts/${post.uid}`}>
+              <time>{post.updatedAt}</time>
+              <strong>{post.title}</strong>
+              <p>{post.excerpt}</p>
+            </Link>
+          ))}
         </div>
       </main>
     </>
   );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+  const client = createClient();
+
+  const response = await client.getAllByType("publication", {
+    pageSize: 100,
+  });
+  const posts = response.map((post) => ({
+    uid: post.uid,
+    title: post.data.title,
+    excerpt: getExcerpt(post.data.content),
+    updatedAt: new Date(post.last_publication_date).toLocaleDateString(
+      "pt-BR",
+      {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      }
+    ),
+  }));
+
+  return { props: { posts } };
+};
+
+const getExcerpt = (content: any[]) => {
+  const textNode = content.find(
+    (node) => node.type === "paragraph" && node.text
+  );
+
+  return textNode ? textNode.text : "";
+};
